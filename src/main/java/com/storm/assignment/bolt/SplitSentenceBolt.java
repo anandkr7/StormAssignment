@@ -13,10 +13,9 @@ import backtype.storm.tuple.Values;
 public class SplitSentenceBolt extends BaseRichBolt {
 
 	private static final long serialVersionUID = 1608666534218867519L;
-
 	private OutputCollector collector;
 
-	public void prepare(Map config, TopologyContext context, OutputCollector collector) {
+	public void prepare(@SuppressWarnings("rawtypes") Map config, TopologyContext context, OutputCollector collector) {
 		this.collector = collector;
 	}
 

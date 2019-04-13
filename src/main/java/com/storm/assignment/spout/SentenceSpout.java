@@ -14,41 +14,39 @@ import backtype.storm.tuple.Fields;
 import backtype.storm.tuple.Values;
 
 public class SentenceSpout extends BaseRichSpout {
-    
-    private ConcurrentHashMap<UUID, Values> pending;
-    private SpoutOutputCollector collector;
-    private String[] sentences = {
-        "the cow jumped over the moon"
-    };
-    private int index = 0;
 
-    public void declareOutputFields(OutputFieldsDeclarer declarer) {
-        declarer.declare(new Fields("sentence"));
-    }
+	private static final long serialVersionUID = -3265801584230264636L;
+	private ConcurrentHashMap<UUID, Values> pending;
+	private SpoutOutputCollector collector;
+	private String[] sentences = { "the cow jumped over the moon" };
+	private int index = 0;
 
-    public void open(Map config, TopologyContext context, 
-            SpoutOutputCollector collector) {
-        this.collector = collector;
-        this.pending = new ConcurrentHashMap<UUID, Values>();
-    }
+	public void declareOutputFields(OutputFieldsDeclarer declarer) {
+		declarer.declare(new Fields("sentence"));
+	}
 
-    public void nextTuple() {
-        Values values = new Values(sentences[index]);
-        UUID msgId = UUID.randomUUID();
-        this.pending.put(msgId, values);
-        this.collector.emit(values, msgId);
-        index++;
-        if (index >= sentences.length) {
-            index = 0;
-        }
-        Utils.waitForMillis(1);
-    }
+	public void open(@SuppressWarnings("rawtypes") Map config, TopologyContext context, SpoutOutputCollector collector) {
+		this.collector = collector;
+		this.pending = new ConcurrentHashMap<UUID, Values>();
+	}
 
-    public void ack(Object msgId) {
-        this.pending.remove(msgId);
-    }
+	public void nextTuple() {
+		Values values = new Values(sentences[index]);
+		UUID msgId = UUID.randomUUID();
+		this.pending.put(msgId, values);
+		this.collector.emit(values, msgId);
+		index++;
+		if (index >= sentences.length) {
+			index = 0;
+		}
+		Utils.waitForMillis(1);
+	}
 
-    public void fail(Object msgId) {
-        this.collector.emit(this.pending.get(msgId), msgId);
-    }    
+	public void ack(Object msgId) {
+		this.pending.remove(msgId);
+	}
+
+	public void fail(Object msgId) {
+		this.collector.emit(this.pending.get(msgId), msgId);
+	}
 }
