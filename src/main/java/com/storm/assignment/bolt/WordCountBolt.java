@@ -6,13 +6,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.storm.assignment.mysql.DatabaseService;
+import org.apache.storm.task.OutputCollector;
+import org.apache.storm.task.TopologyContext;
+import org.apache.storm.topology.OutputFieldsDeclarer;
+import org.apache.storm.topology.base.BaseRichBolt;
+import org.apache.storm.tuple.Tuple;
 
-import backtype.storm.task.OutputCollector;
-import backtype.storm.task.TopologyContext;
-import backtype.storm.topology.OutputFieldsDeclarer;
-import backtype.storm.topology.base.BaseRichBolt;
-import backtype.storm.tuple.Tuple;
+import com.storm.assignment.mysql.DatabaseService;
 
 public class WordCountBolt extends BaseRichBolt {
 
@@ -22,7 +22,7 @@ public class WordCountBolt extends BaseRichBolt {
 	private HashMap<String, Long> counts = null;
 
 	public void prepare(@SuppressWarnings("rawtypes") Map config, TopologyContext context, OutputCollector collector) {
-		databaseService = new DatabaseService("localhost", "storm_assignment", "root", "Admin@123");
+		databaseService = new DatabaseService("localhost", "storm_assignment", "root", "123");
 		this.collector = collector;
 		this.counts = new HashMap<String, Long>();
 	}

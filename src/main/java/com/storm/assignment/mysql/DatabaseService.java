@@ -10,10 +10,9 @@ public class DatabaseService {
 
 	private MySQLConnection conn;
 
-	/*
-	 * CREATE TABLE `storm_assignment`.`word_counts` ( `word` VARCHAR(1024) NOT
-	 * NULL, `count` BIGINT(20) NULL, PRIMARY KEY (`word`));
-	 */
+	  /*CREATE TABLE `storm_assignment`.`word_counts` ( `word` VARCHAR(1024) NOT
+	  NULL, `count` BIGINT(20) NULL, PRIMARY KEY (`word`));*/
+	 
 
 	public DatabaseService(String ip, String database, String username, String password) {
 		System.out.println("**************** Initializing DatabaseService ***********************");
