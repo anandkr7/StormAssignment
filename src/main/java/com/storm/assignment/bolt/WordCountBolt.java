@@ -49,7 +49,7 @@ public class WordCountBolt extends BaseRichBolt {
 		keys.addAll(this.counts.keySet());
 		Collections.sort(keys);
 		for (String key : keys) {
-			System.out.println(key + " : " + this.counts.get(key));
+			System.out.println("Saving data to database --- " + key + " : " + this.counts.get(key));
 			databaseService.persist(key, this.counts.get(key));
 		}
 		System.out.println("--------------");

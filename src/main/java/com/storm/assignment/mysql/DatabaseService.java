@@ -2,6 +2,7 @@ package com.storm.assignment.mysql;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
@@ -18,6 +19,14 @@ public class DatabaseService {
 	public DatabaseService(String ip, String database, String username, String password) {
 		conn = new MySQLConnection(ip, database, username, password);
 		conn.open();
+		Statement stmt = null;
+		String sql = "delete FROM word_counts";
+		try {
+			stmt = (Statement) conn.getConnection().createStatement();
+			stmt.executeQuery(sql);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void persist(String word, Long count) {

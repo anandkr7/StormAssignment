@@ -31,4 +31,7 @@ public class SplitSentenceBolt extends BaseRichBolt {
 	public void declareOutputFields(OutputFieldsDeclarer declarer) {
 		declarer.declare(new Fields("word"));
 	}
+	
+	
+	
 }
