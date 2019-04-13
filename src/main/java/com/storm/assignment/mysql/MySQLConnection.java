@@ -1,4 +1,4 @@
-package com.upgrad.assignment.mysql.services;
+package com.storm.assignment.mysql;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

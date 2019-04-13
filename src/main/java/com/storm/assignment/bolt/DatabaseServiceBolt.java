@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.upgrad.assignment.mysql.services.DatabaseService;
+import com.storm.assignment.mysql.DatabaseService;
 
 import backtype.storm.task.OutputCollector;
 import backtype.storm.task.TopologyContext;
