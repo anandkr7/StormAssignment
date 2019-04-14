@@ -2,6 +2,7 @@ package com.storm.assignment.driver;
 
 import org.apache.storm.Config;
 import org.apache.storm.LocalCluster;
+import org.apache.storm.StormSubmitter;
 import org.apache.storm.topology.TopologyBuilder;
 
 import com.storm.assignment.bolt.SplitSentenceBolt;
@@ -33,11 +34,14 @@ public class WordCountTopology {
 		builder.setBolt(COUNT_BOLT_ID, countBolt, 4).shuffleGrouping(SPLIT_BOLT_ID);
 
 		Config config = new Config();
-		LocalCluster cluster = new LocalCluster();
-
-		cluster.submitTopology(TOPOLOGY_NAME, config, builder.createTopology());
-		Utils.waitForSeconds(10);
-		cluster.killTopology(TOPOLOGY_NAME);
-		cluster.shutdown();
+		if (args != null && args.length > 0) {
+			config.setNumWorkers(3);
+			StormSubmitter.submitTopologyWithProgressBar(args[0], config, builder.createTopology());
+		} else {
+			LocalCluster cluster = new LocalCluster();
+			cluster.submitTopology(TOPOLOGY_NAME, config, builder.createTopology());
+			Utils.waitForSeconds(10);
+			cluster.shutdown();
+		}
 	}
 }
