@@ -17,8 +17,9 @@ import com.storm.assignment.mysql.DatabaseService;
 public class WordCountBolt extends BaseRichBolt {
 
 	private static final long serialVersionUID = -3646220662769984971L;
-	private static DatabaseService databaseService;
+	private DatabaseService databaseService;
 	private OutputCollector collector;
+	private Long counter = 0l;
 	private HashMap<String, Long> counts = null;
 
 	public void prepare(@SuppressWarnings("rawtypes") Map config, TopologyContext context, OutputCollector collector) {
@@ -35,11 +36,29 @@ public class WordCountBolt extends BaseRichBolt {
 		}
 		count++;
 		this.counts.put(word, count);
+		checkAndUpdateDB(counts);
 		this.collector.ack(tuple);
 	}
 
 	public void declareOutputFields(OutputFieldsDeclarer declarer) {
 		// DO NOTHING
+	}
+
+	public void checkAndUpdateDB(HashMap<String, Long> intermediateCounts) {
+		counter++;
+		if (counter >= 1000) {
+			List<String> keys = new ArrayList<String>();
+			keys.addAll(intermediateCounts.keySet());
+			Collections.sort(keys);
+			for (String key : keys) {
+				System.out.println("Saving data to database --- " + key + " : " + intermediateCounts.get(key));
+				databaseService.persist(key, intermediateCounts.get(key));
+			}
+
+			this.counts = new HashMap<String, Long>();
+			counter = 0l;
+		}
+
 	}
 
 	@Override

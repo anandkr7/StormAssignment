@@ -40,7 +40,7 @@ public class WordCountTopology {
 		} else {
 			LocalCluster cluster = new LocalCluster();
 			cluster.submitTopology(TOPOLOGY_NAME, config, builder.createTopology());
-			Utils.waitForSeconds(10);
+			Utils.waitForSeconds(20);
 			cluster.shutdown();
 		}
 	}
