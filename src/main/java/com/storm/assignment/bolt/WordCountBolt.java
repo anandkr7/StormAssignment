@@ -45,7 +45,14 @@ public class WordCountBolt extends BaseRichBolt {
 		count++;
 		this.counts.put(word, count);
 		checkAndUpdateDB(counts);
-		this.collector.ack(tuple);
+		
+		if(count % 200 == 0) {
+			System.out.println("\n\n Failing Tuple - "+ tuple +"\n\n");
+			this.collector.fail(tuple);
+		} else {
+			this.collector.ack(tuple);
+		}
+		
 	}
 
 	public void declareOutputFields(OutputFieldsDeclarer declarer) {

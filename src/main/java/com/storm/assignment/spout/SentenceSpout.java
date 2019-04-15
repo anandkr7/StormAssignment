@@ -61,6 +61,7 @@ public class SentenceSpout extends BaseRichSpout {
 	// Method to Re-Emit the tuple for the Message id once the failure is
 	// encountered
 	public void fail(Object msgId) {
+		System.out.println("\n\n Emitting Failed Tuple - " + this.pending.get(msgId) + "\n\n");
 		this.collector.emit(this.pending.get(msgId), msgId);
 	}
 }
