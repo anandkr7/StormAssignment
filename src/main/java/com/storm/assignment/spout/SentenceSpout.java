@@ -18,20 +18,16 @@ public class SentenceSpout extends BaseRichSpout {
 	private static final long serialVersionUID = -3265801584230264636L;
 	private ConcurrentHashMap<UUID, Values> pending;
 	private SpoutOutputCollector collector;
-	private String[] sentences = {
-	        "my dog has fleas",
-	        "i like cold beverages",
-	        "the dog ate my homework",
-	        "dont have a cow man",
-	        "i dont think i like fleas"
-	    };
+	private String[] sentences = { "my dog has fleas", "i like cold beverages", "the dog ate my homework",
+			"dont have a cow man", "i dont think i like fleas" };
 	private int index = 0;
 
 	public void declareOutputFields(OutputFieldsDeclarer declarer) {
 		declarer.declare(new Fields("sentence"));
 	}
 
-	public void open(@SuppressWarnings("rawtypes") Map config, TopologyContext context, SpoutOutputCollector collector) {
+	public void open(@SuppressWarnings("rawtypes") Map config, TopologyContext context,
+			SpoutOutputCollector collector) {
 		this.collector = collector;
 		this.pending = new ConcurrentHashMap<UUID, Values>();
 	}
@@ -53,7 +49,6 @@ public class SentenceSpout extends BaseRichSpout {
 	}
 
 	public void fail(Object msgId) {
-		System.out.println("\n\n\n***********************Submitting Failed Messages *************************\n\n\n");
 		this.collector.emit(this.pending.get(msgId), msgId);
 	}
 }

@@ -51,7 +51,6 @@ public class WordCountBolt extends BaseRichBolt {
 			keys.addAll(intermediateCounts.keySet());
 			Collections.sort(keys);
 			for (String key : keys) {
-				System.out.println("Saving data to database --- " + key + " : " + intermediateCounts.get(key));
 				databaseService.persist(key, intermediateCounts.get(key));
 			}
 
@@ -63,12 +62,10 @@ public class WordCountBolt extends BaseRichBolt {
 
 	@Override
 	public void cleanup() {
-		System.out.println("--- FINAL COUNTS ---");
 		List<String> keys = new ArrayList<String>();
 		keys.addAll(this.counts.keySet());
 		Collections.sort(keys);
 		for (String key : keys) {
-			System.out.println("Saving data to database --- " + key + " : " + this.counts.get(key));
 			databaseService.persist(key, this.counts.get(key));
 		}
 		System.out.println("--------------");
