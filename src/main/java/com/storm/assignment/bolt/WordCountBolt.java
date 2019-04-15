@@ -14,6 +14,10 @@ import org.apache.storm.tuple.Tuple;
 
 import com.storm.assignment.mysql.DatabaseService;
 
+/**
+ * @author Anand WordCount Bolt which will process the incoming word and
+ *         calculates the counts and persist the count information to database
+ */
 public class WordCountBolt extends BaseRichBolt {
 
 	private static final long serialVersionUID = -3646220662769984971L;
@@ -22,12 +26,16 @@ public class WordCountBolt extends BaseRichBolt {
 	private Long counter = 0l;
 	private HashMap<String, Long> counts = null;
 
+	// Initialize method for the Bolt to initialize Collector and Initialize the
+	// word count HashMap and instanciate the database service
 	public void prepare(@SuppressWarnings("rawtypes") Map config, TopologyContext context, OutputCollector collector) {
 		databaseService = new DatabaseService("localhost", "storm_assignment", "root", "123");
 		this.collector = collector;
 		this.counts = new HashMap<String, Long>();
 	}
 
+	// Method which will process the incoming word and calculates the count and
+	// update the hash map
 	public void execute(Tuple tuple) {
 		String word = tuple.getStringByField("word");
 		Long count = this.counts.get(word);
@@ -44,6 +52,8 @@ public class WordCountBolt extends BaseRichBolt {
 		// DO NOTHING
 	}
 
+	// Method to check and update the word count data to the database after every
+	// 1000 words processing
 	public void checkAndUpdateDB(HashMap<String, Long> intermediateCounts) {
 		counter++;
 		if (counter >= 1000) {
@@ -60,6 +70,8 @@ public class WordCountBolt extends BaseRichBolt {
 
 	}
 
+	// Method to process the pending data during the shutdown of the topology or
+	// cluster.
 	@Override
 	public void cleanup() {
 		List<String> keys = new ArrayList<String>();
@@ -68,6 +80,5 @@ public class WordCountBolt extends BaseRichBolt {
 		for (String key : keys) {
 			databaseService.persist(key, this.counts.get(key));
 		}
-		System.out.println("--------------");
 	}
 }

@@ -7,13 +7,13 @@ import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * @author Anand DatabaseService code which acts as a service for database
+ *         connection and persist and update purposes
+ */
 public class DatabaseService {
 
 	private MySQLConnection conn;
-
-	  /*CREATE TABLE `storm_assignment`.`word_counts` ( `word` VARCHAR(1024) NOT
-	  NULL, `count` BIGINT(20) NULL, PRIMARY KEY (`word`));*/
-	 
 
 	public DatabaseService(String ip, String database, String username, String password) {
 		System.out.println("**************** Initializing DatabaseService ***********************");
@@ -31,6 +31,8 @@ public class DatabaseService {
 		}
 	}
 
+	// Persist the word count by checking the current count in the database and
+	// update the count
 	public void persist(String word, Long count) {
 		PreparedStatement statement = null;
 		Statement stmt = null;

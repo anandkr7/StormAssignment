@@ -3,6 +3,10 @@ package com.storm.assignment.mysql;
 import java.sql.Connection;
 import java.sql.DriverManager;
 
+/**
+ * @author Anand MySQLConnection code which acts as a MySQL Database connection
+ *         provider
+ */
 public class MySQLConnection {
 	private String ip;
 	private String database;

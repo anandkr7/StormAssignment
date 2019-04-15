@@ -10,6 +10,10 @@ import com.storm.assignment.bolt.WordCountBolt;
 import com.storm.assignment.spout.SentenceSpout;
 import com.storm.assignment.util.Utils;
 
+/**
+ * @author Anand WordCountTopology code which will act as the driver class and
+ *         configure the topology
+ */
 public class WordCountTopology {
 
 	private static final String SENTENCE_SPOUT_ID = "sentence-spout";
@@ -28,16 +32,23 @@ public class WordCountTopology {
 		builder.setSpout(SENTENCE_SPOUT_ID, spout, 1);
 
 		// SentenceSpout --> SplitSentenceBolt
+		// Using the Shuffle Grouping from SentenceSpout to randomly distribute tuple to
+		// SplitSentence Bolt
 		builder.setBolt(SPLIT_BOLT_ID, splitBolt, 3).shuffleGrouping(SENTENCE_SPOUT_ID);
 
 		// SplitSentenceBolt --> WordCountBolt
+		// Changing the Fields Grouping to Shuffle Grouping to randomly route the
+		// tuples to all the WordCount Bolts to solve the load imbalance problem with
+		// fields grouping.
 		builder.setBolt(COUNT_BOLT_ID, countBolt, 4).shuffleGrouping(SPLIT_BOLT_ID);
 
 		Config config = new Config();
 		if (args != null && args.length > 0) {
+			// Production Mode
 			config.setNumWorkers(3);
 			StormSubmitter.submitTopologyWithProgressBar(args[0], config, builder.createTopology());
 		} else {
+			// Local Mode
 			LocalCluster cluster = new LocalCluster();
 			cluster.submitTopology(TOPOLOGY_NAME, config, builder.createTopology());
 			Utils.waitForSeconds(20);
